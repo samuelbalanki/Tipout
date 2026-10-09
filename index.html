@@ -15,7 +15,7 @@
 <title>Tipout Calculator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Caveat:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
 <style>
 /* Layout: one narrow phone column of working cards; the envelope is a kraft-paper card you copy from; tab bar pinned to the bottom. */
 :root {
@@ -36,10 +36,11 @@
   --good-bg: #E5F4EB;
   --warn-bg: #FBF0E1;
   --bad-bg: #FBE7E5;
-  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
-  --body: "Figtree", -apple-system, "Segoe UI", system-ui, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  --hand: "Caveat", "Bradley Hand", "Segoe Print", cursive;
+  --display: "Plus Jakarta Sans", -apple-system, "Segoe UI", system-ui, sans-serif;
+  --body: "Plus Jakarta Sans", -apple-system, "Segoe UI", system-ui, sans-serif;
+  --mono: "Plus Jakarta Sans", -apple-system, "Segoe UI", system-ui, sans-serif; /* numbers use tabular figures, not a code font */
+  --sheet: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;    /* only the copy-to-paper sheet */
+  --hand: "Plus Jakarta Sans", -apple-system, "Segoe UI", system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -66,6 +67,8 @@ body {
   color: var(--ink);
   font-family: var(--body);
   font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.005em;
   line-height: 1.45;
   -webkit-text-size-adjust: 100%;
 }
@@ -139,7 +142,7 @@ h1 {
   min-width: 0;
   outline: none;
 }
-textarea { font-family: var(--mono); font-size: 13px; min-height: 120px; resize: vertical; }
+textarea { font-family: var(--sheet); font-size: 13px; min-height: 120px; resize: vertical; }
 
 /* Segmented controls */
 .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--field); border: 1px solid var(--line); border-radius: 11px; padding: 3px; gap: 3px; }
@@ -216,7 +219,7 @@ textarea { font-family: var(--mono); font-size: 13px; min-height: 120px; resize:
   opacity: .7;
 }
 .envelope .card-title { color: color-mix(in srgb, var(--kraft-ink) 70%, transparent); }
-.envelope .label { font-family: var(--hand); font-weight: 700; font-size: 1.9rem; line-height: 1.1; text-wrap: balance; }
+.envelope .label { font-family: var(--hand); font-weight: 800; font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.01em; text-wrap: balance; }
 .envelope .amt .k { color: color-mix(in srgb, var(--kraft-ink) 75%, transparent); }
 .envelope .amt.total { border-top: 1.5px dashed var(--kraft-line); }
 .envelope .amt.total .k { color: var(--kraft-ink); }
@@ -265,7 +268,7 @@ textarea { font-family: var(--mono); font-size: 13px; min-height: 120px; resize:
 .stat .k { font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .stat .v { font-family: var(--mono); font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .sheet {
-  font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; overflow-wrap: anywhere;
+  font-family: var(--sheet); font-size: .9rem; white-space: pre-wrap; overflow-wrap: anywhere;
   background: var(--field); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin: 0;
 }
 .week-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -300,7 +303,7 @@ details summary { cursor: pointer; font-weight: 700; }
 .tut-body { margin: 0; font-size: 1.05rem; }
 .tut-art { display: grid; gap: 10px; pointer-events: none; }
 .tut-env { pointer-events: none; }
-.tut-env .label { font-size: 1.5rem; }
+.tut-env .label { font-size: 1.3rem; }
 .tut-sheet { pointer-events: none; }
 .dots { display: flex; justify-content: center; gap: 8px; }
 .dot-i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
@@ -387,6 +390,18 @@ details.role-group summary::-webkit-details-marker { display: none; }
 details.role-group summary::before { content: "▸ "; }
 details.role-group[open] summary::before { content: "▾ "; }
 a.btn { text-decoration: none; color: inherit; }
+h1 { letter-spacing: -0.02em; }
+html { scroll-padding-top: 16px; scroll-padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
+.combo { position: fixed; z-index: 40; max-height: 240px; overflow-y: auto; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 12px; box-shadow: 0 10px 28px rgb(0 0 0 / .22); padding: 4px; }
+.combo-opt { padding: 11px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.combo-opt:hover, .combo-opt.active { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.combo-opt.on { color: var(--accent); }
+.seg.is-off { opacity: .4; }
+.seg button:disabled { cursor: not-allowed; }
+.small-money { width: 7.5rem; flex: 0 0 auto; padding: 0 8px; }
+.small-money input { padding: 7px 0; font-size: 15px; }
+.stat .s { color: var(--muted); font-size: .85rem; font-weight: 600; }
 </style>
 
 </head>
@@ -775,10 +790,16 @@ a.btn { text-decoration: none; color: inherit; }
     var tip = e.revenue > 0 ? gross / e.revenue * 100 : 0;
     return { total: total, env: env, envelope: envelope, gross: gross, made: made, tip: tip };
   }
+  // Amounts people owe you are often unknown: null means "not sure how much"
+  function known(a) { return typeof a === 'number' && a > 0; }
+  function amtShow(a) { return known(a) ? fmt(a) : 'Amount unknown'; }
+  function withUnknown(sum, n) { return fmt(sum) + (n ? ' + ' + n + ' unknown' : ''); }
   function receivedCalc(e) {
-    var total = sumBy(e.received, function (r) { return r.amount; });
-    var owed = sumBy(e.received.filter(function (r) { return !r.paid; }), function (r) { return r.amount; });
-    return { total: total, owed: owed, paid: r2(total - owed) };
+    var total = sumBy(e.received, function (r) { return known(r.amount) ? r.amount : 0; });
+    var unpaid = e.received.filter(function (r) { return !r.paid; });
+    var owed = sumBy(unpaid, function (r) { return known(r.amount) ? r.amount : 0; });
+    var unknownOwed = unpaid.filter(function (r) { return !known(r.amount); }).length;
+    return { total: total, owed: owed, unknownOwed: unknownOwed, anyOwed: unpaid.length > 0, paid: r2(total - owed) };
   }
   function earned(e) { return e.kind === 'received' ? receivedCalc(e).total : serverCalc(e).made; }
   function hoursOf(e) { return hoursBetween(e.start, e.end); }
@@ -796,9 +817,9 @@ a.btn { text-decoration: none; color: inherit; }
     if (e.kind === 'received') {
       var rc = receivedCalc(e);
       var out = [name() + ' – ' + longDate(e.date) + ' ' + e.shift, ''];
-      e.received.forEach(function (r) { out.push((r.person || 'Someone') + ': ' + fmt(r.amount) + (r.paid ? '' : ' (not paid yet)') + (r.method ? ' · ' + r.method : '')); });
+      e.received.forEach(function (r) { out.push((r.person || 'Someone') + ': ' + amtShow(r.amount) + (r.paid ? '' : ' (not paid yet)') + (r.method ? ' · ' + r.method : '')); });
       out.push('', 'Total tips: ' + fmt(rc.total));
-      if (rc.owed) out.push('Still owed: ' + fmt(rc.owed));
+      if (rc.anyOwed) out.push('Still owed: ' + withUnknown(rc.owed, rc.unknownOwed));
       if (hoursOf(e)) out.push('Hours: ' + hoursTxt(hoursOf(e)) + ' (' + fmt(rc.total / hoursOf(e)) + '/h)');
       return out.join('\n');
     }
@@ -870,7 +891,8 @@ a.btn { text-decoration: none; color: inherit; }
     return Object.keys(g).sort(function (a, b) { return a.toLowerCase() < b.toLowerCase() ? -1 : 1; })
       .map(function (n) { return { name: n, items: g[n].sort(function (a, b) { return a.date < b.date ? -1 : 1; }) }; });
   }
-  function sumItems(items) { return sumBy(items, function (i) { return i.amount; }); }
+  function sumItems(items) { return sumBy(items, function (i) { return known(i.amount) ? i.amount : 0; }); }
+  function unknownCount(items) { return items.filter(function (i) { return !known(i.amount); }).length; }
 
   // ----- Text messages -----
   // The code at the end of an IOU text lets the other person add it to their own app (no server involved)
@@ -896,7 +918,7 @@ a.btn { text-decoration: none; color: inherit; }
   }
   function reminderText(item) {
     var when = shortDate(item.date) + (item.shift ? ' ' + item.shift.toLowerCase() : '');
-    return 'Hey ' + item.person + ', friendly reminder: you owe me ' + fmt(item.amount) + ' from ' + when + '. Thanks! – ' + name();
+    return 'Hey ' + item.person + ', friendly reminder: you still owe me ' + (known(item.amount) ? fmt(item.amount) : 'my tipout') + ' from ' + when + '. Thanks! – ' + name();
   }
 
   // =====================================================================
@@ -926,7 +948,7 @@ a.btn { text-decoration: none; color: inherit; }
   }
   function rformFrom(e) {
     return { date: e.date, shift: e.shift, start: e.start || '', end: e.end || '',
-      rows: e.received.map(function (r) { return { id: r.id, person: r.person, amount: amtText(r.amount), method: r.method || '', notPaid: !r.paid, paidAt: r.paidAt }; }) };
+      rows: e.received.map(function (r) { return { id: r.id, person: r.person, amount: known(r.amount) ? amtText(r.amount) : '', method: r.method || '', notPaid: !r.paid, paidAt: r.paidAt }; }) };
   }
 
   var form = blankForm();
@@ -949,8 +971,9 @@ a.btn { text-decoration: none; color: inherit; }
   function receivedDraft() {
     return { id: ui.editingId || uid(), kind: 'received', location: data.location, date: rform.date, shift: rform.shift,
       start: rform.start, end: rform.end, createdAt: Date.now(),
-      received: rform.rows.filter(function (r) { return (parse(r.amount) || 0) > 0; }).map(function (r) {
-        return { id: r.id, person: r.person.trim(), amount: r2(parse(r.amount)), method: r.method, paid: !r.notPaid, paidAt: r.notPaid ? null : (r.paidAt || Date.now()) };
+      received: rform.rows.filter(function (r) { return r.person.trim() || (parse(r.amount) || 0) > 0; }).map(function (r) {
+        var a = parse(r.amount);
+        return { id: r.id, person: r.person.trim(), amount: a > 0 ? r2(a) : null, method: r.notPaid ? '' : r.method, paid: !r.notPaid, paidAt: r.notPaid ? null : (r.paidAt || Date.now()) };
       }) };
   }
 
@@ -979,20 +1002,18 @@ a.btn { text-decoration: none; color: inherit; }
   }
   function amt(k, v, cls) { return '<div class="amt' + (cls ? ' ' + cls : '') + '"><span class="k">' + esc(k) + '</span><span class="v">' + esc(v) + '</span></div>'; }
   function options(list) { return list.map(function (c) { return '<option value="' + esc(c.name) + '"></option>'; }).join(''); }
-  function coworkerLists() {
-    var mine = team();
-    var h = '<datalist id="coworkers">' + options(mine) + '</datalist>';
-    Object.keys(SUGGEST).forEach(function (k) {
-      var list = mine.filter(function (c) { return SUGGEST[k].indexOf(c.role) >= 0; });
-      h += '<datalist id="cw-' + k + '">' + options(list.length ? list : mine) + '</datalist>';
-    });
-    // People who tip you out: servers first, then bar
-    var payers = mine.filter(function (c) { return c.role === 'Server' || c.role === 'Bar'; });
-    h += '<datalist id="cw-payers">' + options(payers.length ? payers : mine) + '</datalist>';
-    return h;
+  // Names to suggest for each kind of field
+  function comboOptions(key) {
+    var mine = team(), list;
+    if (key === 'payers') list = mine.filter(function (c) { return c.role === 'Server' || c.role === 'Bar'; });
+    else if (SUGGEST[key]) list = mine.filter(function (c) { return SUGGEST[key].indexOf(c.role) >= 0; });
+    else list = mine;
+    return (list.length ? list : mine).map(function (c) { return c.name; });
   }
+  function coworkerLists() { return ''; }
   function moneyField(id, labelText, value, f, extra) {
-    return '<div class="field"><label for="' + id + '">' + esc(labelText) + '</label><div class="money"><span>$</span><input id="' + id + '" data-f="' + f + '"' + (extra || '') + ' inputmode="decimal" autocomplete="off" placeholder="0.00" value="' + esc(value) + '"></div></div>';
+    var ph = extra && extra.indexOf('data-unknown') >= 0 ? 'Unknown' : '0.00';
+    return '<div class="field"><label for="' + id + '">' + esc(labelText) + '</label><div class="money"><span>$</span><input id="' + id + '" data-f="' + f + '"' + (extra || '') + ' inputmode="decimal" autocomplete="off" placeholder="' + ph + '" value="' + esc(value) + '"></div></div>';
   }
   // Press-and-hold button: the action only runs after holding ~1 second
   function holdBtn(label, act, attrs, cls) {
@@ -1019,6 +1040,7 @@ a.btn { text-decoration: none; color: inherit; }
     return null;
   }
   function render() {
+    comboClose();
     var step = ui.changing || (ui.showTour ? 'tour' : onboardingStep());
     document.querySelector('nav.tabs').hidden = !!step;
     if (step) { app.innerHTML = renderOnboarding(step); renderModal(); return; }
@@ -1213,7 +1235,7 @@ a.btn { text-decoration: none; color: inherit; }
       if (l.note) return '<div class="tip-line">' + top + '<div class="hint">' + esc(l.note) + '</div></div>';
       if (isHouse(l)) return '<div class="tip-line">' + top + '</div>';
       var later = !!form.later[l.label];
-      return '<div class="tip-line">' + top + '<div class="ctrl"><input class="text" list="' + (SUGGEST[roleKey(l)] ? 'cw-' + roleKey(l) : 'coworkers') + '" data-f="person" data-label="' + esc(l.label) + '" placeholder="Name" autocomplete="off" value="' + esc(form.people[l.label] || '') + '" aria-label="' + esc(l.label) + ' name">' +
+      return '<div class="tip-line">' + top + '<div class="ctrl"><input class="text" data-combo="' + (SUGGEST[roleKey(l)] ? roleKey(l) : 'coworkers') + '" data-f="person" data-label="' + esc(l.label) + '" placeholder="Name" autocomplete="off" value="' + esc(form.people[l.label] || '') + '" aria-label="' + esc(l.label) + ' name">' +
         '<label class="chip"><input type="checkbox" data-f="later" data-label="' + esc(l.label) + '"' + (later ? ' checked' : '') + '>Pay later</label></div>' +
         (later ? '<div class="later">Goes to Owed when you save</div>' : '') + '</div>';
     }).join('');
@@ -1238,13 +1260,14 @@ a.btn { text-decoration: none; color: inherit; }
     h += shiftCard(rform);
     h += '<section class="card"><div class="card-title">Who tipped you out</div><div class="rec-list">' + rform.rows.map(function (r, i) {
       return '<div class="rec-row"><div class="rec-top">' +
-        '<input class="text" list="cw-payers" data-f="rPerson" data-i="' + i + '" placeholder="Name" autocomplete="off" value="' + esc(r.person) + '" aria-label="Who tipped you out">' +
-        '<div class="money"><span>$</span><input data-f="rAmount" data-i="' + i + '" inputmode="decimal" autocomplete="off" placeholder="0.00" value="' + esc(r.amount) + '" aria-label="Amount"></div></div>' +
-        '<div class="rec-opts"><div class="seg seg-small" role="group" aria-label="How you were paid">' +
-        ['Cash', 'E-transfer'].map(function (m) { return '<button data-act="rMethod" data-i="' + i + '" data-v="' + m + '" aria-pressed="' + (r.method === m) + '">' + m + '</button>'; }).join('') + '</div>' +
+        '<input class="text" data-combo="payers" data-f="rPerson" data-i="' + i + '" placeholder="Name" autocomplete="off" value="' + esc(r.person) + '" aria-label="Who tipped you out">' +
+        '<div class="money"><span>$</span><input data-f="rAmount" data-i="' + i + '" inputmode="decimal" autocomplete="off" placeholder="Unknown" value="' + esc(r.amount) + '" aria-label="Amount (leave blank if you don\'t know)"></div></div>' +
+        '<div class="rec-opts"><div class="seg seg-small' + (r.notPaid ? ' is-off' : '') + '" role="group" aria-label="How you were paid">' +
+        ['Cash', 'E-transfer'].map(function (m) { return '<button data-act="rMethod" data-i="' + i + '" data-v="' + m + '" aria-pressed="' + (r.method === m && !r.notPaid) + '"' + (r.notPaid ? ' disabled' : '') + '>' + m + '</button>'; }).join('') + '</div>' +
         '<label class="chip"><input type="checkbox" data-f="rNotPaid" data-i="' + i + '"' + (r.notPaid ? ' checked' : '') + '>Not paid yet</label>' +
         (rform.rows.length > 1 ? '<button class="icon-btn small-x" data-act="rRemove" data-i="' + i + '" aria-label="Remove this line">✕</button>' : '') + '</div></div>';
-    }).join('') + '</div><button class="btn" data-act="rAdd">+ Add another</button><div id="rec-totals" class="rows"></div></section>';
+    }).join('') + '</div><div class="hint">Leave the amount blank if you\'re not sure. You can add it later when you find out.</div>' +
+      '<button class="btn" data-act="rAdd">+ Add another</button><div id="rec-totals" class="rows"></div></section>';
     h += '<div class="btn-row"><button class="btn primary big" id="save-btn" data-act="saveReceived">' + (editing ? 'Save changes' : 'Save shift') + '</button></div>';
 
     return h + coworkerLists();
@@ -1252,9 +1275,9 @@ a.btn { text-decoration: none; color: inherit; }
   function renderReceivedTotals() {
     var d = receivedDraft(), c = receivedCalc(d), hrs = hoursBetween(rform.start, rform.end);
     var el = document.getElementById('rec-totals'); if (!el) return;
-    el.innerHTML = amt('Total tips', fmt(c.total), 'total') + (c.owed ? '<div class="amt"><span class="k">Not paid yet</span><span class="v warn-t">' + fmt(c.owed) + '</span></div>' : '') +
+    el.innerHTML = amt('Total tips', fmt(c.total), 'total') + (c.anyOwed ? '<div class="amt"><span class="k">Not paid yet</span><span class="v warn-t">' + withUnknown(c.owed, c.unknownOwed) + '</span></div>' : '') +
       (hrs ? amt('Per hour', fmt(c.total / hrs) + '/h') : '');
-    var sb = document.getElementById('save-btn'); if (sb) sb.disabled = c.total <= 0;
+    var sb = document.getElementById('save-btn'); if (sb) sb.disabled = !d.received.length;
     var ho = document.getElementById('hours-out'); if (ho) ho.textContent = hrs ? hoursTxt(hrs) : '';
   }
 
@@ -1265,11 +1288,11 @@ a.btn { text-decoration: none; color: inherit; }
     if (e.kind === 'received') {
       var rc = receivedCalc(e);
       h = '<div class="row"><button class="row-main" data-act="expand" data-id="' + e.id + '" aria-expanded="' + open + '">' +
-        '<span><span class="t">' + esc(shortDate(e.date) + ' · ' + e.shift) + '</span>' + tag + '<br><span class="s">' + e.received.length + ' tipout' + (e.received.length === 1 ? '' : 's') + (hrs ? ' · ' + hoursTxt(hrs) : '') + (rc.owed ? ' · <span class="warn-t">' + fmt(rc.owed) + ' owed</span>' : '') + '</span></span>' +
+        '<span><span class="t">' + esc(shortDate(e.date) + ' · ' + e.shift) + '</span>' + tag + '<br><span class="s">' + e.received.length + ' tipout' + (e.received.length === 1 ? '' : 's') + (hrs ? ' · ' + hoursTxt(hrs) : '') + (rc.anyOwed ? ' · <span class="warn-t">' + withUnknown(rc.owed, rc.unknownOwed) + ' owed</span>' : '') + '</span></span>' +
         '<span class="r">' + fmt(rc.total) + '</span></button>';
       if (open) {
         h += '<div class="row-detail"><div class="mini">' + e.received.map(function (r) {
-          return '<div class="amt"><span class="k">' + esc((r.person || 'Someone') + (r.method ? ' · ' + r.method : '')) + '</span><span class="v">' + fmt(r.amount) +
+          return '<div class="amt"><span class="k">' + esc((r.person || 'Someone') + (r.method ? ' · ' + r.method : '')) + '</span><span class="v">' + amtShow(r.amount) +
             (r.paid ? '' : ' <button class="btn small good" data-act="settle" data-shift="' + e.id + '" data-id="' + r.id + '">Got it</button>') + '</span></div>';
         }).join('') + (hrs ? amt('Hours', hoursTxt(hrs) + ' (' + time12(e.start) + '–' + time12(e.end) + ')') : '') + '</div>' + rowActions(e) + '</div>';
       }
@@ -1319,9 +1342,10 @@ a.btn { text-decoration: none; color: inherit; }
     }
     if (canReceive()) {
       var rl = list.filter(function (e) { return e.kind === 'received'; }), rEarn = sumBy(rl, earned), rHrs = sumBy(rl, hoursOf);
-      var owed = sumBy(rl, function (e) { return receivedCalc(e).owed; });
+      var owed = sumBy(rl, function (e) { return receivedCalc(e).owed; }), owedN = rl.reduce(function (a, e) { return a + receivedCalc(e).unknownOwed; }, 0);
+      var anyOwed = rl.some(function (e) { return receivedCalc(e).anyOwed; });
       h += '<section class="card"><div class="card-title">Tips received this week</div><div class="rows">' + amt('Shifts', String(rl.length)) +
-        (owed ? '<div class="amt"><span class="k">Still owed to you</span><span class="v warn-t">' + fmt(owed) + '</span></div>' : '') +
+        (anyOwed ? '<div class="amt"><span class="k">Still owed to you</span><span class="v warn-t">' + withUnknown(owed, owedN) + '</span></div>' : '') +
         (rl.length ? amt('Average per shift', fmt(rEarn / rl.length)) : '') +
         (rHrs && !isServer() ? amt('Hours', hoursTxt(rHrs)) + amt('Per hour', fmt(rEarn / rHrs) + '/h') : '') +
         amt('Total tips received', fmt(rEarn), 'total') + '</div>' +
@@ -1343,8 +1367,9 @@ a.btn { text-decoration: none; color: inherit; }
   function renderOwed() {
     var iOwe = groupByPerson(owedItems(false)), owedMe = groupByPerson(owedItems(true));
     var h = '<div class="page-head"><h1>Owed</h1></div>';
-    h += '<div class="split-totals"><div class="stat"><div class="k">I owe</div><div class="v warn-t">' + fmt(sumItems(owedItems(false))) + '</div></div>' +
-      '<div class="stat"><div class="k">Owed to me</div><div class="v good-t">' + fmt(sumItems(owedItems(true))) + '</div></div></div>';
+    var oi = owedItems(false), om = owedItems(true);
+    h += '<div class="split-totals"><div class="stat"><div class="k">I owe</div><div class="v warn-t">' + fmt(sumItems(oi)) + '</div>' + (unknownCount(oi) ? '<div class="s">+ ' + unknownCount(oi) + ' unknown</div>' : '') + '</div>' +
+      '<div class="stat"><div class="k">Owed to me</div><div class="v good-t">' + fmt(sumItems(om)) + '</div>' + (unknownCount(om) ? '<div class="s">+ ' + unknownCount(om) + ' unknown</div>' : '') + '</div></div>';
     h += '<section class="card"><div class="card-title">Got an IOU text?</div>' +
       (ui.importing ? '<textarea id="import-text" data-f="importText" placeholder="Paste the whole message here">' + esc(ui.importText) + '</textarea>' +
         '<div class="btn-row"><button class="btn" data-act="cancelImport">Cancel</button><button class="btn primary" data-act="doImport">Add it</button></div>'
@@ -1356,17 +1381,18 @@ a.btn { text-decoration: none; color: inherit; }
         : '<button class="btn" data-act="addDebt" data-v="' + (theyOweMe ? 'owed' : 'owe') + '">+ ' + (theyOweMe ? 'Add someone who owes me' : 'Add something I owe') + '</button>';
       if (!groups.length) s += '<div class="empty">' + (theyOweMe ? 'Nobody owes you right now.' : 'You are all paid up.') + '</div>';
       groups.forEach(function (g) {
-        var total = sumItems(g.items);
-        s += '<div class="person-head"><span class="n">' + esc(g.name || 'No name') + '</span><span class="v ' + (theyOweMe ? 'good-t' : 'warn-t') + '">' + fmt(total) + '</span></div>';
+        var total = sumItems(g.items), unk = unknownCount(g.items);
+        s += '<div class="person-head"><span class="n">' + esc(g.name || 'No name') + '</span><span class="v ' + (theyOweMe ? 'good-t' : 'warn-t') + '">' + (total || !unk ? withUnknown(total, unk) : (unk === 1 ? 'Amount unknown' : unk + ' unknown')) + '</span></div>';
         g.items.forEach(function (i) {
           var body = theyOweMe ? reminderText(i) : iouText(i);
           s += '<div class="debt"><div class="info"><div>' + esc(i.title) + '</div><div class="s">' + esc(i.detail) + '</div></div>' +
-            '<span class="v">' + fmt(i.amount) + '</span>' +
+            (known(i.amount) ? '<span class="v">' + fmt(i.amount) + '</span>'
+              : '<div class="money small-money"><span>$</span><input data-f="owedAmt" data-shift="' + (i.shiftId || '') + '" data-id="' + i.id + '" inputmode="decimal" placeholder="Unknown" aria-label="Amount, if you find out"></div>') +
             '<a class="btn small" href="' + esc(smsHref(i.person, body)) + '">' + (theyOweMe ? 'Remind' : 'Text') + '</a>' +
             '<button class="btn small good" data-act="settle" data-shift="' + (i.shiftId || '') + '" data-id="' + i.id + '">' + (theyOweMe ? 'Got it' : 'Paid') + '</button>' +
             (i.debtId ? holdBtn('Hold to delete', 'deleteDebt', ' data-id="' + i.id + '"', 'danger small') : '') + '</div>';
         });
-        if (g.items.length > 1) s += '<button class="link-btn" data-act="settleAll" data-name="' + esc(g.name) + '" data-v="' + (theyOweMe ? '1' : '0') + '">' + (theyOweMe ? 'They paid it all (' + fmt(total) + ')' : 'Mark all paid (' + fmt(total) + ')') + '</button>';
+        if (g.items.length > 1) s += '<button class="link-btn" data-act="settleAll" data-name="' + esc(g.name) + '" data-v="' + (theyOweMe ? '1' : '0') + '">' + (theyOweMe ? 'They paid it all' : 'Mark all paid') + (unk ? '' : ' (' + fmt(total) + ')') + '</button>';
       });
       return s + '</section>';
     }
@@ -1376,8 +1402,9 @@ a.btn { text-decoration: none; color: inherit; }
   }
   function debtForm(theyOweMe) {
     var f = ui.debtForm;
-    return '<div class="form-grid"><input class="text" id="debt-person" list="coworkers" data-f="debtPerson" placeholder="Name" autocomplete="off" value="' + esc(f.person) + '">' +
-      moneyField('debt-amount', 'Amount', f.amount, 'debtAmount') +
+    return '<div class="form-grid"><input class="text" id="debt-person" data-combo="coworkers" data-f="debtPerson" placeholder="Name" autocomplete="off" value="' + esc(f.person) + '">' +
+      moneyField('debt-amount', 'Amount', f.amount, 'debtAmount', theyOweMe ? ' data-unknown="1"' : '') +
+      (theyOweMe ? '<div class="hint">Leave the amount blank if you don\'t know it yet.</div>' : '') +
       '<input class="text" id="debt-note" data-f="debtNote" placeholder="Note (optional), e.g. covered my shift" value="' + esc(f.note) + '">' +
       '<input class="date-input" type="date" id="debt-date" data-f="debtDate" value="' + esc(f.date) + '" aria-label="Date">' +
       '<div class="btn-row"><button class="btn" data-act="cancelDebt">Cancel</button><button class="btn primary" data-act="saveDebt" data-v="' + (theyOweMe ? '1' : '0') + '">Add</button></div></div>';
@@ -1493,7 +1520,7 @@ a.btn { text-decoration: none; color: inherit; }
   }
   function attemptSaveReceived() {
     var d = receivedDraft();
-    if (!d.received.length) { toast('Add at least one amount'); return; }
+    if (!d.received.length) { toast('Add a name or an amount first'); return; }
     if (d.received.some(function (r) { return !r.paid && !r.person; })) {
       openModal({ title: 'Who owes you?', message: 'Type a name for each tipout marked Not paid yet.', actions: [{ label: 'OK', primary: true }] });
       return;
@@ -1553,11 +1580,11 @@ a.btn { text-decoration: none; color: inherit; }
       var list = s.kind === 'received' ? s.received : s.lines;
       var it = list.find(function (x) { return x.id === id; }); if (!it) return;
       it.paid = true; it.paidAt = Date.now();
-      log(s.kind === 'received' ? it.person + ' paid you ' + fmt(it.amount) + ' (' + shortDate(s.date) + ' ' + s.shift + ')' : 'Paid ' + it.person + ' ' + fmt(it.amount) + ' (' + it.label + ', ' + shortDate(s.date) + ' ' + s.shift + ')');
+      log(s.kind === 'received' ? it.person + ' paid you ' + amtShow(it.amount) + ' (' + shortDate(s.date) + ' ' + s.shift + ')' : 'Paid ' + it.person + ' ' + fmt(it.amount) + ' (' + it.label + ', ' + shortDate(s.date) + ' ' + s.shift + ')');
     } else {
       var d = data.debts.find(function (x) { return x.id === id; }); if (!d) return;
       d.settled = true; d.settledAt = Date.now();
-      log(d.theyOweMe ? d.person + ' paid you ' + fmt(d.amount) : 'Paid ' + d.person + ' ' + fmt(d.amount));
+      log(d.theyOweMe ? d.person + ' paid you ' + amtShow(d.amount) : 'Paid ' + d.person + ' ' + fmt(d.amount));
     }
     save(); render();
   }
@@ -1609,7 +1636,7 @@ a.btn { text-decoration: none; color: inherit; }
     saveReceived: attemptSaveReceived,
     rAdd: function () { rform.rows.push({ id: uid(), person: '', amount: '', method: '', notPaid: false }); render(); var ins = document.querySelectorAll('[data-f="rPerson"]'); if (ins.length) ins[ins.length - 1].focus(); },
     rRemove: function (ds) { rform.rows.splice(Number(ds.i), 1); render(); },
-    rMethod: function (ds) { var r = rform.rows[Number(ds.i)]; r.method = r.method === ds.v ? '' : ds.v; render(); },
+    rMethod: function (ds) { var r = rform.rows[Number(ds.i)]; if (r.notPaid) return; r.method = r.method === ds.v ? '' : ds.v; render(); },
     copySummary: function () { copyText(summary(serverDraft()), 'Summary'); },
     shareSummary: function () { shareText(summary(serverDraft()), 'Tipout'); },
     undoSave: function () { if (ui.lastSaved) { deleteShift(ui.lastSaved.id); ui.lastSaved = null; render(); toast('Shift removed'); } },
@@ -1634,21 +1661,21 @@ a.btn { text-decoration: none; color: inherit; }
     cancelDebt: function () { ui.addDebt = null; render(); },
     saveDebt: function (ds) {
       var f = ui.debtForm, amount = parse(f.amount), person = f.person.trim();
-      if (!person) { toast('Type a name'); return; }
-      if (!amount || amount <= 0) { toast('Enter an amount'); return; }
       var theyOweMe = ds.v === '1';
-      var debt = { id: uid(), date: f.date || workDay(), person: person, amount: r2(amount), note: f.note.trim(), theyOweMe: theyOweMe, settled: false, createdAt: Date.now() };
+      if (!person) { toast('Type a name'); return; }
+      if (!theyOweMe && (!amount || amount <= 0)) { toast('Enter an amount'); return; }
+      var debt = { id: uid(), date: f.date || workDay(), person: person, amount: amount > 0 ? r2(amount) : null, note: f.note.trim(), theyOweMe: theyOweMe, settled: false, createdAt: Date.now() };
       data.debts.push(debt);
-      log((theyOweMe ? 'Added: ' + person + ' owes you ' : 'Added: you owe ' + person + ' ') + fmt(debt.amount) + (debt.note ? ' – ' + debt.note : ''));
+      log((theyOweMe ? 'Added: ' + person + ' owes you ' : 'Added: you owe ' + person + ' ') + amtShow(debt.amount) + (debt.note ? ' – ' + debt.note : ''));
       save(); ui.addDebt = null; render(); toast('Added');
     },
     settleAll: function (ds) {
       var theyOweMe = ds.v === '1', person = ds.name, total = 0;
       data.shifts.forEach(function (s) {
         var list = s.kind === 'received' ? (theyOweMe ? s.received : []) : (theyOweMe ? [] : s.lines);
-        list.forEach(function (x) { if (!x.paid && x.person === person) { x.paid = true; x.paidAt = Date.now(); total += x.amount; } });
+        list.forEach(function (x) { if (!x.paid && x.person === person) { x.paid = true; x.paidAt = Date.now(); total += known(x.amount) ? x.amount : 0; } });
       });
-      data.debts.forEach(function (d) { if (!d.settled && d.person === person && !!d.theyOweMe === theyOweMe) { d.settled = true; d.settledAt = Date.now(); total += d.amount; } });
+      data.debts.forEach(function (d) { if (!d.settled && d.person === person && !!d.theyOweMe === theyOweMe) { d.settled = true; d.settledAt = Date.now(); total += known(d.amount) ? d.amount : 0; } });
       log(theyOweMe ? person + ' paid you ' + fmt(total) + ' (everything they owed)' : 'Paid ' + person + ' ' + fmt(total) + ' (everything owed)');
       save(); render();
     },
@@ -1702,7 +1729,7 @@ a.btn { text-decoration: none; color: inherit; }
     deleteDebt: function (ds) {
       var d = data.debts.find(function (x) { return x.id === ds.id; }); if (!d) return;
       data.debts = data.debts.filter(function (x) { return x.id !== d.id; });
-      log('Deleted entry: ' + (d.theyOweMe ? d.person + ' owes you ' : 'you owe ' + d.person + ' ') + fmt(d.amount));
+      log('Deleted entry: ' + (d.theyOweMe ? d.person + ' owes you ' : 'you owe ' + d.person + ' ') + amtShow(d.amount));
       save(); render(); toast('Entry deleted');
     },
     removeCoworker: function (ds) {
@@ -1719,6 +1746,63 @@ a.btn { text-decoration: none; color: inherit; }
       log('Restored from backup (' + data.shifts.length + ' shifts)'); save(); ui.restore = ''; resetForms(); render(); toast('Backup restored');
     }
   };
+
+  // ----- Name picker -----
+  // Always lists every matching name when you tap the field (a plain suggestion list hides
+  // everything except the name you already picked). Typing filters the list.
+  var combo = { el: null, input: null, items: [], idx: -1 };
+  function comboPanel() {
+    if (!combo.el) { combo.el = document.createElement('div'); combo.el.className = 'combo'; combo.el.setAttribute('role', 'listbox'); combo.el.hidden = true; document.body.appendChild(combo.el); }
+    return combo.el;
+  }
+  function comboOpen(input, showAll) {
+    var all = comboOptions(input.dataset.combo), q = input.value.trim().toLowerCase();
+    var exact = all.some(function (n) { return n.toLowerCase() === q; });
+    var items = (showAll || !q || exact) ? all : all.filter(function (n) { return n.toLowerCase().indexOf(q) >= 0; });
+    combo.input = input; combo.items = items; combo.idx = -1;
+    var panel = comboPanel();
+    if (!items.length) { panel.hidden = true; return; }
+    panel.innerHTML = items.map(function (n, i) {
+      return '<div class="combo-opt' + (n.toLowerCase() === q ? ' on' : '') + '" role="option" data-i="' + i + '">' + esc(n) + '</div>';
+    }).join('');
+    panel.hidden = false;
+    comboPlace();
+  }
+  function comboPlace() {
+    if (!combo.input || !combo.el || combo.el.hidden) return;
+    var r = combo.input.getBoundingClientRect(), below = window.innerHeight - r.bottom;
+    combo.el.style.left = Math.max(8, Math.min(r.left, window.innerWidth - Math.max(180, r.width) - 8)) + 'px';
+    combo.el.style.width = Math.max(180, r.width) + 'px';
+    if (below < 220 && r.top > below) { combo.el.style.top = ''; combo.el.style.bottom = (window.innerHeight - r.top + 4) + 'px'; }
+    else { combo.el.style.bottom = ''; combo.el.style.top = (r.bottom + 4) + 'px'; }
+  }
+  function comboClose() { if (combo.el) combo.el.hidden = true; combo.input = null; }
+  function comboPick(i) {
+    var input = combo.input, n = combo.items[i];
+    if (!input || n == null) return;
+    input.value = n;
+    comboClose();
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  document.addEventListener('focusin', function (ev) { if (ev.target.dataset && ev.target.dataset.combo) comboOpen(ev.target, true); });
+  document.addEventListener('focusout', function (ev) { if (ev.target === combo.input) setTimeout(function () { if (combo.input && document.activeElement !== combo.input) comboClose(); }, 150); });
+  document.addEventListener('pointerdown', function (ev) {
+    var opt = ev.target.closest && ev.target.closest('.combo-opt');
+    if (opt) { ev.preventDefault(); comboPick(Number(opt.dataset.i)); }
+  });
+  // Tapping an already-focused name field reopens the full list
+  document.addEventListener('click', function (ev) { var t = ev.target; if (t.dataset && t.dataset.combo && (!combo.el || combo.el.hidden)) comboOpen(t, true); });
+  window.addEventListener('scroll', comboPlace, true);
+  window.addEventListener('resize', comboPlace);
+
+  // Money and percent fields: digits and one decimal point only (the phone shows the number keypad)
+  function cleanNumber(v) {
+    var c = v.replace(/,/g, '.').replace(/[^0-9.]/g, '');
+    var i = c.indexOf('.');
+    if (i >= 0) c = c.slice(0, i + 1) + c.slice(i + 1).replace(/\./g, '').slice(0, 2);
+    return c;
+  }
 
   // ----- Events -----
   document.addEventListener('click', function (ev) {
@@ -1749,6 +1833,16 @@ a.btn { text-decoration: none; color: inherit; }
   document.addEventListener('keydown', function (ev) {
     var el = ev.target.closest && ev.target.closest('[data-hold]');
     if (el && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); if (!ev.repeat && !holding) startHold(el); return; }
+    if (combo.input && ev.target === combo.input && combo.el && !combo.el.hidden) {
+      if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+        ev.preventDefault();
+        combo.idx = (combo.idx + (ev.key === 'ArrowDown' ? 1 : -1) + combo.items.length) % combo.items.length;
+        Array.prototype.forEach.call(combo.el.children, function (c, i) { c.classList.toggle('active', i === combo.idx); });
+        return;
+      }
+      if (ev.key === 'Enter' && combo.idx >= 0) { ev.preventDefault(); comboPick(combo.idx); return; }
+      if (ev.key === 'Escape') { comboClose(); return; }
+    }
     if (ev.key === 'Escape' && ui.modal) closeModal();
     if (ev.key === 'Enter' && ev.target.id === 'new-coworker') actions.addCoworker();
     if (ev.key === 'Enter' && ev.target.id === 'first-name') actions.saveFirstName();
@@ -1758,6 +1852,11 @@ a.btn { text-decoration: none; color: inherit; }
   // Typing: update state without rebuilding the field you're typing in
   document.addEventListener('input', function (ev) {
     var t = ev.target, f = t.dataset.f;
+    if (t.getAttribute && t.getAttribute('inputmode') === 'decimal') {
+      var cleaned = cleanNumber(t.value);
+      if (cleaned !== t.value) t.value = cleaned;
+    }
+    if (t.dataset.combo && ev.isTrusted) comboOpen(t, false);
     if (!f) return;
     if (f === 'revenue' || f === 'cashDue' || f === 'collected' || f === 'alcohol' || f === 'tips') { form[f] = t.value; renderOutputs(); }
     else if (f === 'person') form.people[t.dataset.label] = t.value;
@@ -1787,13 +1886,24 @@ a.btn { text-decoration: none; color: inherit; }
     else if (f === 'debtDate') ui.debtForm.date = t.value;
     else if (f === 'toggle') { form.toggles[t.dataset.k] = t.checked; renderOutputs(); }
     else if (f === 'later') { form.later[t.dataset.label] = t.checked; renderOutputs(); }
-    else if (f === 'rNotPaid') { rform.rows[Number(t.dataset.i)].notPaid = t.checked; renderReceivedTotals(); }
+    else if (f === 'rNotPaid') { var rr = rform.rows[Number(t.dataset.i)]; rr.notPaid = t.checked; if (t.checked) rr.method = ''; render(); }
     else if (f === 'showExamples') { ui.showExamples = t.checked; render(); }
     else if (f === 'trackHours') { data.trackHours = t.checked; log(t.checked ? 'Turned on hours' : 'Turned off hours'); save(); toast(t.checked ? 'Hours turned on' : 'Hours turned off'); }
     else if (f === 'newRole') ui.newRole = t.value;
     else if (f === 'coworkerRole') {
       var cw = data.coworkers.find(function (c) { return c.id === t.dataset.id; });
       if (cw && t.value) { cw.role = t.value; log('Set ' + cw.name + ' to ' + t.value); save(); render(); }
+    }
+    else if (f === 'owedAmt') {
+      var a = parse(t.value); if (!(a > 0)) return;
+      if (t.dataset.shift) {
+        var sh = findShift(t.dataset.shift), row = sh && sh.received.find(function (x) { return x.id === t.dataset.id; });
+        if (row) { row.amount = r2(a); log(row.person + ' owes you ' + fmt(a) + ' (' + shortDate(sh.date) + ' ' + sh.shift + ')'); }
+      } else {
+        var db = data.debts.find(function (x) { return x.id === t.dataset.id; });
+        if (db) { db.amount = r2(a); log(db.person + ' owes you ' + fmt(a)); }
+      }
+      save(); render(); toast('Amount saved');
     }
     else if (f === 'cwPhone') {
       var c2 = data.coworkers.find(function (c) { return c.id === t.dataset.id; });
